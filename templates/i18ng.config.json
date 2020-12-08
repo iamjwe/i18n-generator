@@ -1,0 +1,13 @@
+{
+  "extra": {
+    "codePath": "xxx",
+    "markdownPath": "ooo"
+  },
+  "translate": {
+    "markdownPath": "ooo"
+  },
+  "generator": {
+    "markdownPath": "ooo",
+    "localePath": "111"
+  }
+}

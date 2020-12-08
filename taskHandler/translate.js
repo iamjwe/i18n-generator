@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 // 不询问，采取配置文件的形式
 
 const taskTranslate = (config) => {

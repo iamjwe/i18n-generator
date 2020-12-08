@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const taskExtra = (config) => {
   return new Promise((resolve, reject) => {
     console.log('extra');

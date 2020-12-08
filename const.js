@@ -29,4 +29,6 @@ const testConfig = {
   }
 }
 
-module.exports = {TASK, argvTaskMap, testConfig}
+const configFileName = 'i18n.config.json';
+
+module.exports = {TASK, argvTaskMap, testConfig, configFileName}

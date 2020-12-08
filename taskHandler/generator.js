@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+// const { convertOne, convertAll } = require('./generator-helper');
 
 const taskGenerator = (config) => {
   return new Promise((resolve, reject) => {
