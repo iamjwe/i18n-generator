@@ -1,5 +1,5 @@
 {
-  "name": "i18n-generator",
+  "name": "i18n-generator-zh",
   "version": "1.0.0",
   "main": "cli.js",
   "bin": {
