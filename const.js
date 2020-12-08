@@ -6,6 +6,7 @@ const TASK = {
 }
 // 参数与任务之间的映射表
 const argvTaskMap = {
+  '-help': Symbol(),
   '-e': [TASK.EXTRA],
   '-t': [TASK.TRANSLATE],
   '-g': [TASK.GENERATOR],

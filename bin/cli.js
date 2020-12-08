@@ -4,11 +4,20 @@ const { TASK, argvTaskMap, testConfig } = require('../const');
 const { taskExtra } = require('../sdk/extra');
 const { taskTranslate } = require('../sdk/translate');
 const { taskGenerator } = require('../sdk/generator');
+const { helpHandler, argumentErrorHanler } = require('../utils/commandHandler');
 
 const argv = process.argv.slice(2);
-const taskQueue = argvTaskMap[argv[0]];// 异步任务队列
+let taskQueue;
+if (argv.length === 0 || argv[0]=== '-help') {
+  // 无参数以及-help参数都会打印help信息
+  helpHandler();
+  process.exit(1);
+} else {
+  // 有参数，根据参数获取任务队列
+  taskQueue = argvTaskMap[argv[0]];
+}
 if (!taskQueue) {
-  console.error('参数错误');
+  argumentErrorHanler();
   process.exit(-1);
 }
 
