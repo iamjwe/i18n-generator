@@ -1,0 +1,11 @@
+{
+  "name": "i18n-generator",
+  "version": "1.0.0",
+  "main": "cli.js",
+  "bin": {
+		"i18n-g": "bin/cli.js"
+	},
+  "repository": "https://github.com/iamjwe/i18n-generator.git",
+  "author": "iamjwe",
+  "license": "MIT"
+}
