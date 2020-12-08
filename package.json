@@ -1,10 +1,10 @@
 {
   "name": "i18n-entozh",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "cli.js",
   "bin": {
-		"i18n-g": "bin/cli.js"
-	},
+    "i18n-g": "bin/cli.js"
+  },
   "repository": "https://github.com/iamjwe/i18n-generator.git",
   "author": "iamjwe",
   "license": "MIT"
