@@ -44,3 +44,8 @@ exports.wirteLocalesImportFileErrorHandler =() => {
   console.log('生成引入文件时，写入资源引入错误');
   process.exit(-1);
 }
+
+exports.mdPathNotExistErrorHandler =() => {
+  console.log('markdown文件/文件夹不存在');
+  process.exit(-1);
+}

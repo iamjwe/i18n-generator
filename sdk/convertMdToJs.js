@@ -137,6 +137,8 @@ exports.wirteLocalesImportFile = (enUSFilePath, zhCNFilePath, importDirForEnDirR
     })
     enUSFileExportContent += '}';
     zhCNFileExportContent += '}';
+    // 如果已经存在，则补充。或者读取重写
+    
     fs.writeFileSync(enUSFilePath, enUSFileImportContent + enUSFileExportContent);
     fs.writeFileSync(zhCNFilePath, zhCNFileImportContent + zhCNFileExportContent);
   } catch (e) {

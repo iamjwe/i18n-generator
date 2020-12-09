@@ -4,8 +4,9 @@ const TASK = {
   TRANSLATE: Symbol(),
   GENERATOR: Symbol()
 }
+exports.TASK = TASK;
 // 参数与任务之间的映射表
-const argvTaskMap = {
+exports.argvTaskMap = {
   '-help': Symbol(),
   '-e': [TASK.EXTRA],
   '-t': [TASK.TRANSLATE],
@@ -15,23 +16,13 @@ const argvTaskMap = {
   '-etg': [TASK.EXTRA, TASK.TRANSLATE, TASK.GENERATOR],
 }
 
-const testConfig = {
-  extra: {
-    codePath:'xxx',
-    markdownPath:'ooo',
-  },
-  translate: {
-    markdownPath:'ooo',
-  },
-  generator: {
-    markdownPath:'ooo',
-    localePath: 'lll'
-  }
-}
+exports.mdFileReg = /.md/;
+exports.jsFileReg = /.js$/;
 
-const mdFileReg = /.md/;
-const jsFileReg = /.js$/;
+exports.configFileName = 'i18n.config.json';
 
-const configFileName = 'i18n.config.json';
 
-module.exports = {TASK, argvTaskMap, testConfig, configFileName, mdFileReg, jsFileReg}
+exports.enDirName = 'en-US';
+exports.zhDirName = 'zh-CN';
+exports.enUSFileName = 'en-US.js';
+exports.zhCNFileName = 'zh-CN.js';
