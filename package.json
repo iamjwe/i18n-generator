@@ -1,6 +1,6 @@
 {
   "name": "i18n-entozh",
-  "version": "1.2.3",
+  "version": "1.0.4",
   "main": "cli.js",
   "bin": {
     "i18n": "bin/cli.js"
