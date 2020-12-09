@@ -1,5 +1,3 @@
-// 不询问，采取配置文件的形式
-
 const taskTranslate = (config) => {
   return new Promise((resolve, reject) => {
     console.log('translate');

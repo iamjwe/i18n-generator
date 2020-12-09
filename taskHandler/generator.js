@@ -1,14 +1,15 @@
 const { generatorResourceJs, generatorResourceImportJs } = require('../taskHelper/generator-helper');
+const { parsePath }  = require('../utils/utils');
 
 const taskGenerator = (config) => {
   return new Promise((resolve, reject) => {
-    const mdPath = config.mdPath;
-    const enDir = config.enDir;
-    const zhDir = config.zhDir;
+    const mdPath = parsePath(config.mdPath);
+    const enDir = parsePath(config.enDir);
+    const zhDir = parsePath(config.zhDir);
     const importDirForEnDirRelavtiveToEnUSFile = config.importDirForEnDirRelavtiveToEnUSFile;
     const importDirForZhDirRelavtiveToZhCNFile = config.importDirForZhDirRelavtiveToZhCNFile;
-    const enUSFilePath = config.enUSFilePath;
-    const zhCNFilePath = config.zhCNFilePath;
+    const enUSFilePath = parsePath(config.enUSFilePath);
+    const zhCNFilePath = parsePath(config.zhCNFilePath);
     generatorResourceJs(mdPath, enDir, zhDir);
     generatorResourceImportJs(enDir, zhDir, enUSFilePath, zhCNFilePath, importDirForEnDirRelavtiveToEnUSFile, importDirForZhDirRelavtiveToZhCNFile);
     resolve();
