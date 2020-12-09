@@ -29,6 +29,9 @@ const testConfig = {
   }
 }
 
+const mdFileReg = /.md/;
+const jsFileReg = /.js$/;
+
 const configFileName = 'i18n.config.json';
 
-module.exports = {TASK, argvTaskMap, testConfig, configFileName}
+module.exports = {TASK, argvTaskMap, testConfig, configFileName, mdFileReg, jsFileReg}

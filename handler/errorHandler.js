@@ -1,23 +1,46 @@
 const { argumentErrorPrint, configFileNotFoundErrorPrint, configParseErrorPrint, initConfigFileErrorPrint } = require("./printHandler");
 
-const argumentErrorHanler = () => {
+exports.argumentErrorHanler = () => {
   argumentErrorPrint();
   process.exit(-1);
 }
 
-const configFileNotFoundErrorHandler = () => {
+exports.configFileNotFoundErrorHandler = () => {
   configFileNotFoundErrorPrint();
   process.exit(-1);
 }
 
-const configParseErrorHandler = () => {
+exports.configParseErrorHandler = () => {
   configParseErrorPrint();
   process.exit(-1);
 }
 
-const initConfigFileErrorHandler =() => {
+exports.initConfigFileErrorHandler =() => {
   initConfigFileErrorPrint();
   process.exit(-1);
 }
 
-module.exports = { argumentErrorHanler, configFileNotFoundErrorHandler, configParseErrorHandler, initConfigFileErrorHandler}
+exports.readMdErrorHandler =() => {
+  console.log('生成资源文件时，markdown读取错误');
+  process.exit(-1);
+}
+
+exports.parseMdErrorHandler =() => {
+  console.log('生成资源文件时，markdown解析错误');
+  process.exit(-1);
+}
+
+exports.writeLocalesErrorHandler =() => {
+  console.log('生成资源文件时，code写入错误');
+  process.exit(-1);
+}
+
+exports.readLocalesResourceErrorHandler =() => {
+  console.log('生成引入文件时，读取资源文件错误');
+  process.exit(-1);
+}
+
+exports.wirteLocalesImportFileErrorHandler =() => {
+  console.log('生成引入文件时，写入资源引入错误');
+  process.exit(-1);
+}

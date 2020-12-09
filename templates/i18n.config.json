@@ -7,7 +7,12 @@
     "markdownPath": "ooo"
   },
   "generator": {
-    "markdownPath": "ooo",
-    "localePath": "111"
+    "mdPath": "D:/workspace/i18n-g-test/test",
+    "enDir": "D:/workspace/i18n-g-test",
+    "enUSFilePath": "D:/workspace/i18n-g-test/en-US.js",
+    "importDirForEnDirRelavtiveToEnUSFile": "./test",
+    "zhDir": "D:/workspace/i18n-g-test",
+    "zhCNFilePath": "D:/workspace/i18n-g-test/zh-CN.js",
+    "importDirForZhDirRelavtiveToZhCNFile": "./test"
   }
 }
