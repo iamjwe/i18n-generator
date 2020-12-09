@@ -83,6 +83,7 @@ exports.wirteLocalesResource = (enDir, zhDir, enZhMapFileArr) => {
       })
       enFiledata += '}';
       zhFiledata += '}';
+      console.log(enFilePath, enFiledata);
       fs.writeFileSync(enFilePath, enFiledata);
       fs.writeFileSync(zhFilePath, zhFiledata);
     })

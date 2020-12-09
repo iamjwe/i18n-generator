@@ -7,6 +7,6 @@ exports.parsePath = (pathInput) => {
   if (pathInput === '.') {
     return workDir
   } else {
-    return workDir + '/' + pathInput;
+    return workDir + '\\' + pathInput;
   }
 }
