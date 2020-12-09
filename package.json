@@ -3,7 +3,7 @@
   "version": "1.2.3",
   "main": "cli.js",
   "bin": {
-    "i18n-g": "bin/cli.js"
+    "i18n": "bin/cli.js"
   },
   "repository": "https://github.com/iamjwe/i18n-generator.git",
   "author": "iamjwe",
