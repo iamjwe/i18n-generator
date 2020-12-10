@@ -117,8 +117,26 @@ exports.readLocalesResource = (enDir, zhDir) => {
   }
 }
 
+// 写入en-US.js与zh-CN.js文件，如果已有内容则读取import和export内容后和新的内容进行拼装。参数文件以及文件夹都已经创建
 exports.wirteLocalesImportFile = (enUSFilePath, zhCNFilePath, importDirForEnDirRelavtiveToEnUSFile, importDirForZhDirRelavtiveToZhCNFile, fileNameArrMap) => {
   try {
+    let oldEnFileInport = '';
+    let oldEnFileExport = '';
+    let oldZhFileInport = '';//只取...的部分
+    let oldZhFileExport = '';
+    const oldEnFileContent = fs.readFileSync(enUSFilePath, { encoding: 'utf-8' });
+    console.log(oldEnFileContent);
+    if (oldEnFileContent) {
+      const resultEn = oldEnFileContent.split('export default {\n');
+      oldEnFileInport = resultEn[0];
+      oldEnFileExport = resultEn[1].split('}')[0];
+    }
+    const oldZhFileContent = fs.readFileSync(zhCNFilePath, { encoding: 'utf-8' });
+    if (oldEnFileContent) {
+      const resultZh = oldZhFileContent.split('export default {\n');
+      oldZhFileInport = resultZh[0];
+      oldZhFileExport = resultZh[1].split('}')[0];
+    }
     const enFileNameArr = fileNameArrMap.enFileNameArr;
     const zhFileNameArr = fileNameArrMap.zhFileNameArr;
     let enUSFileImportContent = '';
@@ -130,15 +148,17 @@ exports.wirteLocalesImportFile = (enUSFilePath, zhCNFilePath, importDirForEnDirR
       enUSFileImportContent += `import ${importName} from '${importDirForEnDirRelavtiveToEnUSFile}/${fileName}';\n`;
       enUSFileExportContent += `  ...${importName},\n`;
     })
+    enUSFileImportContent += oldEnFileInport;
+    enUSFileExportContent +=oldEnFileExport;
     zhFileNameArr.map((fileName) => {
       const importName = firstToLowwer(fileName);
       zhCNFileImportContent += `import ${importName} from '${importDirForZhDirRelavtiveToZhCNFile}/${fileName}';\n`;
       zhCNFileExportContent += `  ...${importName},\n`;
     })
+    zhCNFileImportContent += oldZhFileInport;
+    zhCNFileExportContent += oldZhFileExport;
     enUSFileExportContent += '}';
     zhCNFileExportContent += '}';
-    // 如果已经存在，则补充。或者读取重写
-    
     fs.writeFileSync(enUSFilePath, enUSFileImportContent + enUSFileExportContent);
     fs.writeFileSync(zhCNFilePath, zhCNFileImportContent + zhCNFileExportContent);
   } catch (e) {

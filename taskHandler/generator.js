@@ -6,6 +6,22 @@ const fs = require('fs');
 const { enDirName, zhDirName, enUSFileName, zhCNFileName } = require('../const')
 let rootMdPath;
 
+function deleteDir(path) {
+  let files = [];
+  if( fs.existsSync(path) ) {
+      files = fs.readdirSync(path);
+      files.forEach(function(file,index){
+          let curPath = path + "/" + file;
+          if(fs.statSync(curPath).isDirectory()) {
+              deleteDir(curPath);
+          } else {
+              fs.unlinkSync(curPath);
+          }
+      });
+      fs.rmdirSync(path);
+  }
+}
+
 const confirmDirExist = (dirPath) => {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });// 多级创建
@@ -13,9 +29,12 @@ const confirmDirExist = (dirPath) => {
   return dirPath;
 }
 
-const confirmFileDirExist = (filePath) => {
+const confirmFileExist = (filePath) => {
   const dirPath = path.dirname(filePath);
   confirmDirExist(dirPath);
+  if (!fs.existsSync(filePath)) {
+    fs.openSync(filePath, 'w')
+  }
   return filePath;
 }
 
@@ -65,8 +84,11 @@ const getDirParseInfoArr = (mdPath, localesDir) => {
 
 const taskGenerator = (config) => {
   return new Promise((resolve, reject) => {
-    const enUSFilePath = confirmFileDirExist(parsePath(config.localesDir + '/' + enUSFileName));
-    const zhCNFilePath = confirmFileDirExist(parsePath(config.localesDir + '/' + zhCNFileName));
+    // 先把locales删掉
+    deleteDir(parsePath(config.localesDir));
+    // 生成locales结构
+    const enUSFilePath = confirmFileExist(parsePath(path.join(config.localesDir, enUSFileName)));
+    const zhCNFilePath = confirmFileExist(parsePath(path.join(config.localesDir, zhCNFileName)));
     const mdPath = parsePath(config.mdPath);
     rootMdPath = mdPath;
     const localesDir = confirmDirExist(parsePath(config.localesDir));
