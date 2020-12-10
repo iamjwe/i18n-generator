@@ -23,10 +23,10 @@ const getDirParseInfo = (mdDir, localesDir) => {
   // 获得相对路径
   const realtiveMdPath = mdDir.split(rootMdPath)[1];
   // dir是绝对路径
-  const enDir = confirmDirExist(localesDir + "\\" + enDirName + realtiveMdPath);
-  const zhDir = confirmDirExist(localesDir + "\\" + zhDirName + realtiveMdPath);
-  const importDirForEnDirRelavtiveToEnUSFile = `./en-US${realtiveMdPath.replace('\\', '/')}`;
-  const importDirForZhDirRelavtiveToZhCNFile = `./zh-CN${realtiveMdPath.replace('\\', '/')}`;
+  const enDir = confirmDirExist(path.join(localesDir,enDirName + realtiveMdPath));
+  const zhDir = confirmDirExist(path.join(localesDir, zhDirName + realtiveMdPath));
+  const importDirForEnDirRelavtiveToEnUSFile = `./en-US${realtiveMdPath}`;
+  const importDirForZhDirRelavtiveToZhCNFile = `./zh-CN${realtiveMdPath}`;
   return {
     mdPath: mdDir, 
     enDir,
@@ -40,11 +40,11 @@ const getDirParseInfo = (mdDir, localesDir) => {
 const recursionMdPath = (mdPath, localesDir, dirParseInfoArr) => {
     dirParseInfoArr.push(getDirParseInfo(mdPath, localesDir));
     const dirs = fs.readdirSync(mdPath).filter((item) => {
-      const statObj = fs.statSync(mdPath + '\\' + item);
+      const statObj = fs.statSync(path.join(mdPath, item));
       return statObj.isDirectory(mdPath)
     });
     dirs.forEach((dir) => {
-      recursionMdPath(mdPath + "\\" + dir, localesDir, dirParseInfoArr)
+      recursionMdPath(path.join(mdPath, dir), localesDir, dirParseInfoArr)
     })
 }
 

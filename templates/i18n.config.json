@@ -8,11 +8,6 @@
   },
   "generator": {
     "mdPath": "test",
-    "enDir": "locales/en-US",
-    "enUSFilePath": "locales/en-US.js",
-    "importDirForEnDirRelavtiveToEnUSFile": "./en-US",
-    "zhDir": "locales/zh-CN",
-    "zhCNFilePath": "locales/zh-CN.js",
-    "importDirForZhDirRelavtiveToZhCNFile": "./en-US"
+    "localesDir": "locales"
   }
 }

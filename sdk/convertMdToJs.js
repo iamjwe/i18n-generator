@@ -37,7 +37,7 @@ exports.readMd = (mdPath) => {
         });
         mdFileArr.forEach((filePath) => {
           const fileName = path.basename(filePath, '.md');
-          mdFileDataArr.push({ fileName, content: fs.readFileSync(mdPath + "\\" +filePath, { encoding: 'utf-8' }) });
+          mdFileDataArr.push({ fileName, content: fs.readFileSync(path.join(mdPath ,filePath), { encoding: 'utf-8' }) });
         })
         break;
     }
@@ -68,8 +68,8 @@ exports.parseMd = (mdFileDataArr) => {
 exports.wirteLocalesResource = (enDir, zhDir, enZhMapFileArr) => {
   try {
     enZhMapFileArr.forEach((enZhMapFile) => {
-      const enFilePath = enDir + "\\" + enZhMapFile.fileName + '.js';
-      const zhFilePath = zhDir + "\\" + enZhMapFile.fileName + '.js';
+      const enFilePath = path.join(enDir, enZhMapFile.fileName + '.js');
+      const zhFilePath = path.join(zhDir, enZhMapFile.fileName + '.js');
       let enFiledata = 'export default { \n';
       let zhFiledata = 'export default { \n';
       const enZhMapArr = enZhMapFile.enZhMapArr;
