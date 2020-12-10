@@ -1,4 +1,6 @@
-const fs = require('fs');
 
-const path = "D:/workspace/i18n-g-test/locales"
-fs.mkdirSync(path)
+console.log(eval("/t\\((['\"])[^\\1]*\\1\\)/g"))
+// /\/t\((['"])[^\1]*\1\)\/g/
+// /t\((['"])[^\1]*\1\)/g
+// /t\((['"])[^\1]*\1\)/g
+// /t\\((['\"])[^\\1]*\\1\\)/g

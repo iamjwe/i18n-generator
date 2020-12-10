@@ -1,13 +1,21 @@
 {
   "extra": {
-    "codePath": "xxx",
-    "markdownPath": "ooo"
+    "codePath": "src/dir1/ExperimentView.js",
+    "matchReg": {
+      "languageVariableReg": " /t\\((['\"])[^\\1]*\\1\\)/g",
+      "languageKeyReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
+      "regKeyIndex": "2"
+    },
+    "markdown": {
+      "filePath": "md3",
+      "columnName": "英语"
+    }
   },
   "translate": {
     "markdownPath": "ooo"
   },
   "generator": {
-    "mdPath": "test",
+    "mdPath": "md",
     "localesDir": "locales"
   }
 }

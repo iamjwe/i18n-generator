@@ -49,3 +49,9 @@ exports.mdPathNotExistErrorHandler =() => {
   console.log('markdown文件/文件夹不存在');
   process.exit(-1);
 }
+
+exports.extraLangKeyErrorHandler = (e) => {
+  console.log('从代码中提取语言键错误');
+  console.log(e.message);
+  process.exit(-1);
+}
