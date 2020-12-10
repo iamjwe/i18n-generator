@@ -94,7 +94,6 @@ const taskGenerator = (config) => {
     const localesDir = confirmDirExist(parsePath(config.localesDir));
     const dirParseInfoArr = getDirParseInfoArr(mdPath, localesDir);
     dirParseInfoArr.forEach((dirInfo) => {
-      console.log('-----', dirInfo);
       generatorResourceJs(dirInfo.mdPath, dirInfo.enDir, dirInfo.zhDir);
       generatorResourceImportJs(dirInfo.enDir, dirInfo.zhDir, enUSFilePath, zhCNFilePath, dirInfo.importDirForEnDirRelavtiveToEnUSFile, dirInfo.importDirForZhDirRelavtiveToZhCNFile);
     })

@@ -83,7 +83,6 @@ exports.wirteLocalesResource = (enDir, zhDir, enZhMapFileArr) => {
       })
       enFiledata += '}';
       zhFiledata += '}';
-      console.log(enFilePath, enFiledata);
       fs.writeFileSync(enFilePath, enFiledata);
       fs.writeFileSync(zhFilePath, zhFiledata);
     })
@@ -125,7 +124,6 @@ exports.wirteLocalesImportFile = (enUSFilePath, zhCNFilePath, importDirForEnDirR
     let oldZhFileInport = '';//只取...的部分
     let oldZhFileExport = '';
     const oldEnFileContent = fs.readFileSync(enUSFilePath, { encoding: 'utf-8' });
-    console.log(oldEnFileContent);
     if (oldEnFileContent) {
       const resultEn = oldEnFileContent.split('export default {\n');
       oldEnFileInport = resultEn[0];
