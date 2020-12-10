@@ -25,8 +25,8 @@ const getDirParseInfo = (mdDir, localesDir) => {
   // dir是绝对路径
   const enDir = confirmDirExist(path.join(localesDir,enDirName + realtiveMdPath));
   const zhDir = confirmDirExist(path.join(localesDir, zhDirName + realtiveMdPath));
-  const importDirForEnDirRelavtiveToEnUSFile = `./en-US${realtiveMdPath}`;
-  const importDirForZhDirRelavtiveToZhCNFile = `./zh-CN${realtiveMdPath}`;
+  const importDirForEnDirRelavtiveToEnUSFile = `./en-US${realtiveMdPath.replace('\\', '/')}`;
+  const importDirForZhDirRelavtiveToZhCNFile = `./zh-CN${realtiveMdPath.replace('\\', '/')}`;
   return {
     mdPath: mdDir, 
     enDir,
