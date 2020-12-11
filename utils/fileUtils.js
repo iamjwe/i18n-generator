@@ -26,7 +26,7 @@ exports.writeFile = (filePath, content) => {
   return fs.writeFileSync(filePath, content);
 }
 
-exports.deleteDir = (dirPath) => {
+const deleteDir = (dirPath) => {
   let files = [];
   if( fs.existsSync(dirPath) ) {
       files = fs.readdirSync(dirPath);
@@ -41,6 +41,8 @@ exports.deleteDir = (dirPath) => {
       fs.rmdirSync(dirPath);
   }
 }
+
+exports.deleteDir = deleteDir;
 
 const createDir = (dirPath) => {
   if (!fs.existsSync(dirPath)) {

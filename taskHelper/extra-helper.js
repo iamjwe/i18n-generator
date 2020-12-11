@@ -3,7 +3,7 @@ const { extraLangKey, convertStrArrToMdTableStr } = require('../sdk/extra');
 const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix }  = require('../utils/pathUtils');
 
 // codePath是一个文件
-exports.parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
+const parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
   // 读取：从markdown文件中读取字符串内容
   const content = readFileUtf8(codeFilePath);
   // 匹配：从字符串中正则查找得到语言变量字符串数组
@@ -16,7 +16,7 @@ exports.parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageK
 }
 
 // codePath是一个文件夹
-exports.parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
+const parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
   const dirPathArr = getAllDirNameRecursion(codeDirPath);
   dirPathArr.forEach((curDirPath) => {
     let curMdDiPath;
@@ -24,7 +24,7 @@ exports.parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableRe
     if (curDirPath === codeDirPath) {
       curMdDiPath = mdDirPath;
     } else {
-      curMdDiPath = getPathConcat(mdDirPath, getSliceBasePath(codeDirPath));
+      curMdDiPath = getPathConcat(mdDirPath, getSliceBasePath(curDirPath, codeDirPath));
     }
     // 获取当前文件夹下的符合suffix后缀的文件
     const files = getFilesPathArrByDir(curDirPath);
@@ -43,9 +43,9 @@ exports.parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableRe
     })
     // 调用parseCodeFile提取文件夹中的每个文件
     files.forEach((filePath) => {
-      parseCodeFile(filePath, curMdDiPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName)
+      parseCodeFile(filePath, curMdDiPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName);
     })
   })
-  console.log(dirPathArr);
 }
 
+module.exports = { parseCodeFile, parseCodeDir }

@@ -35,6 +35,5 @@ exports.getDirNameFromPath = (path) => {
 }
 
 exports.getFileSuffix = (fileName) => {
-  //TODO  修改为第一个.之后的内容即视为后缀
-  return fileName.match(/\.(.+)$/)[1];
+  return fileName.match(/(\..+)$/)[1];
 }
