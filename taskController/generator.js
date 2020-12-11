@@ -1,4 +1,4 @@
-const { generatorResourceJs, generatorResourceImportJs } = require('../taskHelper/generator-helper');
+const { generatorResourceJs, generatorResourceImportJs } = require('../taskService/generator');
 const { mdPathNotExistErrorHandler } = require('../handler/errorHandler');
 const { parsePath } = require('../utils/utils');
 const path = require('path');

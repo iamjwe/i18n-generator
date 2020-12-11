@@ -1,7 +1,7 @@
 {
   "extra": {
     "code": {
-      "path": "src/test.js",
+      "path": "src",
       "suffix": ["/.js$/"]
     },
     "matchReg": {
@@ -10,7 +10,7 @@
       "regKeyIndex": "2"
     },
     "markdown": {
-      "path": "md3",
+      "path": "md4",
       "columnName": "英语"
     }
   },

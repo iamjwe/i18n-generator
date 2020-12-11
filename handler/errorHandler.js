@@ -1,51 +1,51 @@
 const { argumentErrorPrint, configFileNotFoundErrorPrint, configParseErrorPrint, initConfigFileErrorPrint } = require("./printHandler");
 
-exports.argumentErrorHanler = () => {
+exports.argumentErrorHanler = (e) => {
   argumentErrorPrint();
   process.exit(-1);
 }
 
-exports.configFileNotFoundErrorHandler = () => {
-  configFileNotFoundErrorPrint();
+exports.configFileNotFoundErrorHandler = (e) => {
+  configFileNotFoundErrorPrint(e);
   process.exit(-1);
 }
 
-exports.configParseErrorHandler = () => {
+exports.configParseErrorHandler = (e) => {
   configParseErrorPrint();
   process.exit(-1);
 }
 
-exports.initConfigFileErrorHandler =() => {
+exports.initConfigFileErrorHandler =(e) => {
   initConfigFileErrorPrint();
   process.exit(-1);
 }
 
-exports.readMdErrorHandler =() => {
+exports.readMdErrorHandler =(e) => {
   console.log('生成资源文件时，markdown读取错误');
   process.exit(-1);
 }
 
-exports.parseMdErrorHandler =() => {
+exports.parseMdErrorHandler =(e) => {
   console.log('生成资源文件时，markdown解析错误');
   process.exit(-1);
 }
 
-exports.writeLocalesErrorHandler =() => {
+exports.writeLocalesErrorHandler =(e) => {
   console.log('生成资源文件时，code写入错误');
   process.exit(-1);
 }
 
-exports.readLocalesResourceErrorHandler =() => {
+exports.readLocalesResourceErrorHandler =(e) => {
   console.log('生成引入文件时，读取资源文件错误');
   process.exit(-1);
 }
 
-exports.wirteLocalesImportFileErrorHandler =() => {
+exports.wirteLocalesImportFileErrorHandler =(e) => {
   console.log('生成引入文件时，写入资源引入错误');
   process.exit(-1);
 }
 
-exports.mdPathNotExistErrorHandler =() => {
+exports.mdPathNotExistErrorHandler =(e) => {
   console.log('markdown文件/文件夹不存在');
   process.exit(-1);
 }

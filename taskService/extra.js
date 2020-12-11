@@ -1,5 +1,5 @@
 const { getAllDirNameRecursion, readFileUtf8, writeFile, createFile, getFilesPathArrByDir } = require('../utils/fileUtils');
-const { extraLangKey, convertStrArrToMdTableStr } = require('../sdk/extra');
+const { extraLangKey, convertStrArrToMdTableStr } = require('../taskSDK/extra');
 const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix }  = require('../utils/pathUtils');
 
 // codePath是一个文件

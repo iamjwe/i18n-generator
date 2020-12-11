@@ -1,4 +1,4 @@
-const { parseCodeFile, parseCodeDir } = require('../taskHelper/extra-helper');
+const { parseCodeFile, parseCodeDir } = require('../taskService/extra');
 const { getPathAbsolute, getPathConcat, getPathType } = require('../utils/pathUtils');
 const { createDir, deleteDir } = require('../utils/fileUtils');
 

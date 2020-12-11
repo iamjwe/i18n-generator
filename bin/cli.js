@@ -1,55 +1,83 @@
 #!/usr/bin/env node
-// 负责命令解析以及任务分发，分发后由taskHandler中的具体handler处理处理
-const { TASK, argvTaskMap } = require('../const');
-const { taskExtra } = require('../taskHandler/extra');
-const { taskTranslate } = require('../taskHandler/translate');
-const { taskGenerator } = require('../taskHandler/generator');
-const { initConfig } = require('../taskHandler/init');
+const { TASK } = require('../const');
+const { getPathConcat } = require('../utils/pathUtils');
+const { initConfig } = require('../initHandler/init');
 const { helpPrint } = require('../handler/printHandler');
 const { argumentErrorHanler } = require('../handler/errorHandler');
-const { readConfig } = require('../helper/readConfig');
+const { configFileName } = require('../const');
+const { configFileNotFoundErrorHandler, configParseErrorHandler } = require('../handler/errorHandler');
+const { readJsonFile, isPathExist } = require('../utils/fileUtils');
+const { tasksLauncher } = require('../taskLauncher/launch');
 
-const destDir = process.cwd();
+// 获取用户输入的路径
+const workDir = process.cwd();
+// 获取用户输入的任务和参数
 const argv = process.argv.slice(2);
-if (argv.length === 0 || argv[0] === '-help') {
-  // 无参数以及-help参数都会打印help信息
-  helpPrint();
-  process.exit(1);
-} else if (argv[0] === 'init') {
-  initConfig(destDir);
-  process.exit(1);
+
+// 无参时默认执行help
+if (argv.length === 0) {
+  argv.push("help");
 }
+
+const argv1Handler = (argv1) => {
+  switch(argv1) {
+    case 'init':
+      initConfig(workDir);
+      process.exit(1);
+    case 'help':
+      helpPrint();
+      process.exit(1);
+    case 'task':
+    case 'tasks':
+      break;
+    default:
+      argumentErrorHanler();// 内部process.exit(-1);
+  }
+}
+
+const argv2Handler = (argv2) => {
+  let taskQueue;
+  switch(argv2) {
+    case '-e':
+      taskQueue = [TASK.EXTRA];
+      break;
+    case '-t':
+      taskQueue = [TASK.TRANSLATE];
+      break;
+    case '-g':
+      taskQueue = [TASK.GENERATOR];
+      break;
+    case '-et':
+      taskQueue = [TASK.EXTRA, TASK.TRANSLATE];
+      break;
+    case '-tg':
+      taskQueue = [TASK.TRANSLATE, TASK.GENERATOR];
+      break;
+    case '-etg':
+      taskQueue = [TASK.EXTRA, TASK.TRANSLATE, TASK.GENERATOR];
+      break;
+    default:
+      argumentErrorHanler();// 内部process.exit(-1);
+  }
+  return taskQueue;
+}
+
+argv1Handler(argv[0]);
+const taskQueue = argv2Handler(argv[1]);
+
+// 封装读取配置文件函数
+const readJsonConfig = (configPath) => {
+  const configFilePath = getPathConcat(configPath, configFileName);
+  if (!isPathExist(configFilePath)) {
+    configFileNotFoundErrorHandler();
+  }
+  try {
+    const jsonObj = readJsonFile(configFilePath);
+    return jsonObj
+  } catch(e) {
+    configParseErrorHandler(e);
+  }
+};
 
 // 进入任务处理
-const taskQueue = argvTaskMap[argv[0]];
-const config = readConfig(destDir);
-
-if (!taskQueue) {
-  argumentErrorHanler();
-}
-
-// 任务执行器
-const taskRunner = (taskType) => {
-  switch (taskType) {
-    case TASK.EXTRA:
-      return taskExtra(config.extra);
-    case TASK.TRANSLATE:
-      return taskTranslate(config.translate);
-    case TASK.GENERATOR:
-      return taskGenerator(config.generator);
-  }
-}
-
-// 异步任务迭代器:递归实现异步任务队列调用
-let queuePointer = 0;
-const taskIteratorAsync = () => {
-  if (queuePointer === taskQueue.length) {
-    return
-  }
-  taskRunner(taskQueue[queuePointer]).then(() => {
-    queuePointer++;
-    taskIteratorAsync();
-  })
-}
-
-taskIteratorAsync();
+tasksLauncher(taskQueue, readJsonConfig(workDir));

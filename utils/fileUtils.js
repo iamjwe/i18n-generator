@@ -1,5 +1,11 @@
 const fs = require('fs');
-const path = require('path');
+const p = require('path');
+
+const isPathExist = (path) => {
+  return fs.existsSync(path)
+}
+
+exports.isPathExist = isPathExist;
 
 exports.getAllDirNameRecursion = (dirPath) => {
   const rootPath = dirPath;
@@ -7,19 +13,25 @@ exports.getAllDirNameRecursion = (dirPath) => {
   const recursion = (dirPath, dirPathArr) => {
     dirPathArr.push(dirPath);
     const dirs = fs.readdirSync(dirPath).filter((item) => {
-      const statObj = fs.statSync(path.join(dirPath, item));
+      const statObj = fs.statSync(p.join(dirPath, item));
       return statObj.isDirectory()
     });
     dirs.forEach((dir) => {
-      recursion(path.join(rootPath, dir), dirPathArr)
+      recursion(p.join(rootPath, dir), dirPathArr)
     })
   }
   recursion(dirPath, dirPathArr);
   return dirPathArr;
 }
 
-exports.readFileUtf8 = (filePath) => {
+const readFileUtf8 = (filePath) => {
   return fs.readFileSync(filePath, { encoding: 'utf-8' });
+}
+
+exports.readFileUtf8 = readFileUtf8;
+
+exports.readJsonFile = (filePath) => {
+  return JSON.parse(fs.readFileSync(filePath));
 }
 
 exports.writeFile = (filePath, content) => {
@@ -28,7 +40,7 @@ exports.writeFile = (filePath, content) => {
 
 const deleteDir = (dirPath) => {
   let files = [];
-  if( fs.existsSync(dirPath) ) {
+  if( isPathExist(dirPath) ) {
       files = fs.readdirSync(dirPath);
       files.forEach(function(file,index){
           let curPath = dirPath + "/" + file;
@@ -45,7 +57,7 @@ const deleteDir = (dirPath) => {
 exports.deleteDir = deleteDir;
 
 const createDir = (dirPath) => {
-  if (!fs.existsSync(dirPath)) {
+  if (!isPathExist(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });// 多级创建
   }
   return dirPath;
@@ -53,9 +65,9 @@ const createDir = (dirPath) => {
 exports.createDir = createDir;
 
 exports.createFile = (filePath) => {
-  const dirPath = path.dirname(filePath);
+  const dirPath = p.dirname(filePath);
   createDir(dirPath);
-  if (!fs.existsSync(filePath)) {
+  if (!isPathExist(filePath)) {
     fs.openSync(filePath, 'w')
   }
   return filePath;
@@ -64,13 +76,11 @@ exports.createFile = (filePath) => {
 exports.getFilesPathArrByDir = (dirPath) => {
   let filesPathArr = [];
   const files = fs.readdirSync(dirPath).filter((item) => {// 过滤文件夹
-    const statObj = fs.statSync(path.join(dirPath, item));
+    const statObj = fs.statSync(p.join(dirPath, item));
     return !statObj.isDirectory()
   });
   files.forEach((file) => {
-    filesPathArr.push(path.join(dirPath, file));
+    filesPathArr.push(p.join(dirPath, file));
   })
   return filesPathArr;
 }
-
-
