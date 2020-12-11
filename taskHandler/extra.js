@@ -5,7 +5,9 @@ const { createDir, deleteDir } = require('../utils/fileUtils');
 const taskExtra = (config) => {
   return new Promise((resolve, reject) => {
     const codePath = getPathAbsolute(config.code.path);
-    const suffixArr = config.code.suffix;
+    const suffixRegArr = config.code.suffix.map((strReg) => {
+      return eval(strReg);
+    });
     const mdPath = createDir(getPathAbsolute(config.markdown.path));
     const columnName = config.markdown.columnName;
     const languageVariableReg = eval(config.matchReg.languageVariableReg);
@@ -20,7 +22,7 @@ const taskExtra = (config) => {
         parseCodeFile(codePath, mdPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName);
         break;
       case 'dir':
-        parseCodeDir(codePath, mdPath, suffixArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName);
+        parseCodeDir(codePath, mdPath, suffixRegArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName);
         break;
     }
     resolve();

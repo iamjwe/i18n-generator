@@ -1,6 +1,6 @@
 const { getAllDirNameRecursion, readFileUtf8, writeFile, createFile, getFilesPathArrByDir } = require('../utils/fileUtils');
 const { extraLangKey, convertStrArrToMdTableStr } = require('../sdk/extra');
-const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileNameFromPath, getFileSuffix }  = require('../utils/pathUtils');
+const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix }  = require('../utils/pathUtils');
 
 // codePath是一个文件
 exports.parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
@@ -16,7 +16,7 @@ exports.parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageK
 }
 
 // codePath是一个文件夹
-exports.parseCodeDir = (codeDirPath, mdDirPath, suffixArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
+exports.parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
   const dirPathArr = getAllDirNameRecursion(codeDirPath);
   dirPathArr.forEach((curDirPath) => {
     let curMdDiPath;
@@ -32,7 +32,14 @@ exports.parseCodeDir = (codeDirPath, mdDirPath, suffixArr, languageVariableReg, 
     files.filter((filePath) => {
       const fileName = getFileNameFromPath(filePath);
       const suffix = getFileSuffix(fileName);
-      return suffixArr.includes(suffix)
+      let regMapResult = false;
+      for (let i=0;i<suffixRegArr.length;i++) {
+        if (suffixRegArr[i].test(suffix)) {
+          regMapResult = true;
+          break;
+        }
+      }
+      return regMapResult
     })
     // 调用parseCodeFile提取文件夹中的每个文件
     files.forEach((filePath) => {
