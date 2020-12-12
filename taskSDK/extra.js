@@ -2,7 +2,6 @@
 const { extraLangKeyErrorHandler } = require('../handler/errorHandler');
 // 从一段字符串中取出符合正则规则的键
 exports.extraLangKey = (content, languageVariableReg, languageKeyReg, regKeyIndex) => {
-  // TODO 异常处理
   try {
     const keyArr = [];
     const languageVariableArr = content.match(languageVariableReg);
