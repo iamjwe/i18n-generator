@@ -1,24 +1,40 @@
 {
   "extra": {
-    "code": {
+    "codePath": {
       "path": "src",
-      "suffix": ["/.js$/"]
+      "suffixs": ["/.js$/"]
     },
-    "matchReg": {
-      "languageVariableReg": "/t\\((['\"])[^\\1]*\\1\\)/g",
-      "languageKeyReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
-      "regKeyIndex": "2"
+    "markdownPath": "md2",
+    "rules": [{
+      "sentenceReg": "/t\\((['\"])[^\\1]*\\1\\)/g",
+      "wordsReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
+      "wordsRegIndex": 2,
+      "columnName": "sa"
     },
-    "markdown": {
-      "path": "md4",
-      "columnName": "英语"
-    }
+    {
+      "sentenceReg": "/t\\((['\"])[^\\1]*\\1\\)/g",
+      "wordsReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
+      "wordsRegIndex": 2,
+      "columnName": "mixi"
+    }]
   },
   "translate": {
-    "markdownPath": "ooo"
+    "fromColumn": 1,
+    "toColumn": [{
+      "columnName": "sa",
+      "columnData": {
+
+      }
+    }]
   },
   "generator": {
-    "mdPath": "md",
-    "localesDir": "locales"
+    "markdownPath": "md",
+    "resourcePath": "locales",
+    "generatorRule": [{
+      "fromColumn": 1,
+      "toResource": {
+        "resourceName": "fsa"
+      }
+    }]
   }
 }

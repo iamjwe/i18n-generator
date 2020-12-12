@@ -51,21 +51,27 @@ const selectColumn = (content, columnIndex) => {
 
 // 插入一列
 const insertColumn = (content, columnObj, columnIndex) => {
-    const matrix = mdTableStrToMatrixObj(content);
-    // 校正columnIndex
-    const columnLength = matrix[0].length;
-    if (columnIndex === undefined || columnIndex > columnLength) {
-        columnIndex = columnLength;// 插入到最后
-    }
+    const matrix = content ? mdTableStrToMatrixObj(content) : [];
     const columnArr = columnObjToColumnArr(columnObj);
-    // 插入列
-    matrix.forEach((row, index) => {
-        // 插入排序思想：找到位置后，元素后移再插入
-        for (let i = columnLength - 1; i >= columnIndex; i--) {
-            row[i+1] = row[i];
+    if (matrix.length === 0) {// 无数据，插入为第一列
+        columnArr.forEach((column) => {
+            matrix.push([column]);
+        })
+    } else {
+        // 有数据，插入列到指定索引处
+        // 校正columnIndex
+        const columnLength = matrix[0].length;
+        if (columnIndex === undefined || columnIndex > columnLength) {
+            columnIndex = columnLength; // 插入到最后
         }
-        row[columnIndex] = columnArr[index];
-    }) 
+        matrix.forEach((row, index) => {
+            // 插入排序思想：找到位置后，元素后移再插入
+            for (let i = columnLength - 1; i >= columnIndex; i--) {
+                row[i + 1] = row[i];
+            }
+            row[columnIndex] = columnArr[index];
+        })
+    }
     const mdTableStr = matrixObjTomdTableStr(matrix);
     return mdTableStr;
 }

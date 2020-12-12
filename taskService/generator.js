@@ -1,5 +1,5 @@
 const lodash = require('lodash');
-const {readMd, parseMd, wirteLocalesResource, readLocalesResource, wirteLocalesImportFile} = require('../taskSDK/generator');
+const {readMd, parseMd, wirteLocalesResource, readLocalesResource, wirteLocalesImportFile} = require('../taskIO/generator');
 
 
 exports.generatorResourceJs = (mdPath, enDir, zhDir) => {

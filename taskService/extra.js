@@ -1,30 +1,23 @@
-const { getAllDirNameRecursion, readFileUtf8, writeFile, createFile, getFilesPathArrByDir } = require('../utils/fileUtils');
-const { extraLangKey, convertStrArrToMdTableStr } = require('../taskSDK/extra');
-const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix }  = require('../utils/pathUtils');
+const { extraIO } = require('../taskIO/extra');
+const { getAllDirNameRecursion, createFile, getFilesPathArrByDir, createDir, deleteDir } = require('../utils/fileUtils');
+const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix, getPathType } = require('../utils/pathUtils');
 
 // codePath是一个文件
-const parseCodeFile = (codeFilePath, mdDirPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
-  // 读取：从markdown文件中读取字符串内容
-  const content = readFileUtf8(codeFilePath);
-  // 匹配：从字符串中正则查找得到语言变量字符串数组
-  const keyArr = extraLangKey(content, languageVariableReg, languageKeyReg, regKeyIndex);
-  // 转换：从语言变量字符串数组得到md表格字符串
-  const mdTableStr = convertStrArrToMdTableStr(keyArr, columnName);
-  // 写入：将md表格字符串写入到md文件中
-  const mdFilePath = getPathConcat(mdDirPath, getFileNameFromPath(codeFilePath).replace('.js', '.md'));
-  writeFile(createFile(mdFilePath), mdTableStr);
+const extraCodeFile = (codeFilePath, mdDirPath, rules) => {
+  const mdFilePath = createFile(getPathConcat(mdDirPath, getFileNameFromPath(codeFilePath).replace('.js', '.md')));
+  extraIO(codeFilePath, mdFilePath, rules);
 }
 
 // codePath是一个文件夹
-const parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg, languageKeyReg, regKeyIndex, columnName) => {
+const extraCodeDir = (codeDirPath, suffixRegArr, markdownPath, rules) => {
   const dirPathArr = getAllDirNameRecursion(codeDirPath);
   dirPathArr.forEach((curDirPath) => {
     let curMdDiPath;
     // 截取相对路径获取mdDirPath
     if (curDirPath === codeDirPath) {
-      curMdDiPath = mdDirPath;
+      curMdDiPath = markdownPath;
     } else {
-      curMdDiPath = getPathConcat(mdDirPath, getSliceBasePath(curDirPath, codeDirPath));
+      curMdDiPath = getPathConcat(markdownPath, getSliceBasePath(curDirPath, codeDirPath));
     }
     // 获取当前文件夹下的符合suffix后缀的文件
     const files = getFilesPathArrByDir(curDirPath);
@@ -33,7 +26,7 @@ const parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg,
       const fileName = getFileNameFromPath(filePath);
       const suffix = getFileSuffix(fileName);
       let regMapResult = false;
-      for (let i=0;i<suffixRegArr.length;i++) {
+      for (let i = 0; i < suffixRegArr.length; i++) {
         if (suffixRegArr[i].test(suffix)) {
           regMapResult = true;
           break;
@@ -43,9 +36,21 @@ const parseCodeDir = (codeDirPath, mdDirPath, suffixRegArr, languageVariableReg,
     })
     // 调用parseCodeFile提取文件夹中的每个文件
     files.forEach((filePath) => {
-      parseCodeFile(filePath, curMdDiPath, languageVariableReg, languageKeyReg, regKeyIndex, columnName);
+      extraCodeFile(filePath, curMdDiPath, rules);
     })
   })
 }
 
-module.exports = { parseCodeFile, parseCodeDir }
+// 负责业务控制
+exports.extraService = (codePath, suffixRegArr, markdownPath, rules) => {
+  deleteDir(markdownPath);  // 删除有内容的
+  createDir(markdownPath);  // 创建一个空的
+  switch (getPathType(codePath)) {
+    case 'file':
+      extraCodeFile(codePath, markdownPath, rules);
+      break;
+    case 'dir':
+      extraCodeDir(codePath, suffixRegArr, markdownPath, rules);
+      break;
+  }
+}
