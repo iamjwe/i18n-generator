@@ -8,7 +8,6 @@ const isPathExist = (path) => {
 exports.isPathExist = isPathExist;
 
 exports.getAllDirNameRecursion = (dirPath) => {
-  const rootPath = dirPath;
   const dirPathArr = [];
   const recursion = (dirPath, dirPathArr) => {
     dirPathArr.push(dirPath);
@@ -17,7 +16,7 @@ exports.getAllDirNameRecursion = (dirPath) => {
       return statObj.isDirectory()
     });
     dirs.forEach((dir) => {
-      recursion(p.join(rootPath, dir), dirPathArr)
+      recursion(p.join(dirPath, dir), dirPathArr)
     })
   }
   recursion(dirPath, dirPathArr);
@@ -73,14 +72,20 @@ exports.createFile = (filePath) => {
   return filePath;
 }
 
-exports.getFilesPathArrByDir = (dirPath) => {
+exports.getFilesPathArrByDir = (dirPath, fileNameReg) => {
   let filesPathArr = [];
   const files = fs.readdirSync(dirPath).filter((item) => {// 过滤文件夹
     const statObj = fs.statSync(p.join(dirPath, item));
     return !statObj.isDirectory()
   });
+  files.filter((fileName) => {
+    const fileSuffix = fileName.match(/(\..+)$/)[1];
+    return fileNameReg.test(fileSuffix)
+  })
   files.forEach((file) => {
     filesPathArr.push(p.join(dirPath, file));
   })
   return filesPathArr;
 }
+
+

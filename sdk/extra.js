@@ -1,5 +1,5 @@
 // 从一篇文章/代码中取出符合正则规则的键
-exports.extraWordsByContext = (context, sentenceReg, wordsReg, wordsRegIndex) => {
+extraWordsByContext = (context, sentenceReg, wordsReg, wordsRegIndex) => {
     const extraSentencesByContext = (context, sentenceReg) => {
         return context.match(sentenceReg)
     }
@@ -18,3 +18,5 @@ exports.extraWordsByContext = (context, sentenceReg, wordsReg, wordsRegIndex) =>
     // TODO 如果sentences为null，异常处理
     return extraWordsBySentence(sentences, wordsReg, wordsRegIndex);
 }
+
+module.exports = { extraWordsByContext }

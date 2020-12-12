@@ -26,14 +26,19 @@ exports.getUpperDirPath = (path) => {
   return p.dirname(path);
 }
 
-exports.getFileNameFromPath = (path) => {
-  return p.basename(path);
+exports.getFileNameFromPath = (filePath) => {
+  return p.basename(filePath);
 }
 
-exports.getDirNameFromPath = (path) => {
-  return p.basename(path);
+exports.getDirNameFromPath = (dirPath) => {
+  return p.basename(dirPath);
 }
 
 exports.getFileSuffix = (fileName) => {
   return fileName.match(/(\..+)$/)[1];
+}
+
+exports.getFileNameNoSuffix = (filePath) => {
+  const fileName = p.basename(filePath);
+  return fileName.match(/([^\.]+)/)[1]
 }
