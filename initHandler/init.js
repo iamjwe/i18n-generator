@@ -1,14 +1,14 @@
 const { configFileName } = require('../const');
-const fs = require('fs');
-const path = require('path');
+const { readFileBuffer, writeFile } = require("../utils/fileUtils");
+const { getPathConcat } = require("../utils/pathUtils");
 const { initConfigFileErrorHandler } = require('../handler/errorHandler');
 
-const initConfig = (targetDir) => {
+const initConfig = (workDir) => {
   try {
-    const configTpPath = path.join(__dirname, "../templates/i18n.config.json");
-    const targetConfigPath = path.join(targetDir, configFileName);
-    const configTp = fs.readFileSync(configTpPath);
-    fs.writeFileSync(targetConfigPath, configTp);
+    const configTpPath = getPathConcat(__dirname, `../templates/${configFileName}`);
+    const configTp = readFileBuffer(configTpPath);
+    const targetConfigPath = getPathConcat(workDir, configFileName);
+    writeFile(targetConfigPath, configTp);
   } catch {
     initConfigFileErrorHandler();
   }

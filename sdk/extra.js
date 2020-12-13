@@ -6,11 +6,9 @@ extraWordsByContext = (context, sentenceReg, wordsReg, wordsRegIndex) => {
 
     const extraWordsBySentence = (sentences, wordsReg, wordsRegIndex) => {
         const words = [];
-        console.log(sentences, wordsReg, wordsRegIndex)
         sentences.forEach((sentence) => {
             words.push(sentence.match(wordsReg)[wordsRegIndex]);
         })
-        console.log(words)
         return words;
     }
 

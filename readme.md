@@ -47,6 +47,7 @@ i18n task -g
 | task -t     | 执行TRANSLATE翻译任务                                        |
 | task -g     | 执行GENERATOR生成任务                                        |
 | task -et    | 先执行EXTRA提取，再执行TRANSLATE翻译任务                     |
+| task -eg    | 先执行EXTRA提取，再执行GENERATOR生成任务                     |
 | task -tg    | 先执行TRANSLATE翻译任务，再执行GENERATOR生成任务             |
 | task -etg   | 先执行EXTRA提取，再执行TRANSLATE翻译任务，最后执行GENERATOR生成任务 |
 

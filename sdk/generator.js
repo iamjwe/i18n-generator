@@ -13,7 +13,6 @@ const convert2ColumnToResourceJsStr = (keyColumn, valColumn) => {
     // 得到2 * n 矩阵
     const matrix = zip(keyColumn, valColumn);
     let resourceJsStr = 'export default { \n';
-    console.log(matrix)
     matrix.forEach((row) => {
         const key = row[0];
         const val = row[1];

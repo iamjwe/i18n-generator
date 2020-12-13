@@ -23,6 +23,10 @@ exports.getAllDirNameRecursion = (dirPath) => {
   return dirPathArr;
 }
 
+exports.readFileBuffer = (filePath) => {
+  return fs.readFileSync(filePath);
+}
+
 const readFileUtf8 = (filePath) => {
   return fs.readFileSync(filePath, { encoding: 'utf-8' });
 }
@@ -78,10 +82,12 @@ exports.getFilesPathArrByDir = (dirPath, fileNameReg) => {
     const statObj = fs.statSync(p.join(dirPath, item));
     return !statObj.isDirectory()
   });
-  files.filter((fileName) => {
-    const fileSuffix = fileName.match(/(\..+)$/)[1];
-    return fileNameReg.test(fileSuffix)
-  })
+  if (fileNameReg) {
+    files.filter((fileName) => {
+      const fileSuffix = fileName.match(/(\..+)$/)[1];
+      return fileNameReg.test(fileSuffix)
+    })
+  }
   files.forEach((file) => {
     filesPathArr.push(p.join(dirPath, file));
   })

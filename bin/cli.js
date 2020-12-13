@@ -1,12 +1,8 @@
 #!/usr/bin/env node
 const { TASK } = require('../const');
-const { getPathConcat } = require('../utils/pathUtils');
 const { initConfig } = require('../initHandler/init');
 const { helpPrint } = require('../handler/printHandler');
 const { argumentErrorHanler } = require('../handler/errorHandler');
-const { configFileName } = require('../const');
-const { configFileNotFoundErrorHandler, configParseErrorHandler } = require('../handler/errorHandler');
-const { readJsonFile, isPathExist } = require('../utils/fileUtils');
 const { tasksLauncher } = require('../taskLauncher/launch');
 
 // 获取用户输入的路径
@@ -19,6 +15,7 @@ if (argv.length === 0) {
   argv.push("help");
 }
 
+// 解析第一个参数
 const argv1Handler = (argv1) => {
   switch(argv1) {
     case 'init':
@@ -34,7 +31,7 @@ const argv1Handler = (argv1) => {
       argumentErrorHanler();// 内部process.exit(-1);
   }
 }
-
+// 解析第二个参数
 const argv2Handler = (argv2) => {
   let taskQueue;
   switch(argv2) {
@@ -49,6 +46,9 @@ const argv2Handler = (argv2) => {
       break;
     case '-et':
       taskQueue = [TASK.EXTRA, TASK.TRANSLATE];
+      break;
+    case '-eg':
+      taskQueue = [TASK.EXTRA, TASK.GENERATOR];
       break;
     case '-tg':
       taskQueue = [TASK.TRANSLATE, TASK.GENERATOR];
@@ -65,19 +65,5 @@ const argv2Handler = (argv2) => {
 argv1Handler(argv[0]);
 const taskQueue = argv2Handler(argv[1]);
 
-// 封装读取配置文件函数
-const readJsonConfig = (configPath) => {
-  const configFilePath = getPathConcat(configPath, configFileName);
-  if (!isPathExist(configFilePath)) {
-    configFileNotFoundErrorHandler();
-  }
-  try {
-    const jsonObj = readJsonFile(configFilePath);
-    return jsonObj
-  } catch(e) {
-    configParseErrorHandler(e);
-  }
-};
-
 // 进入任务处理
-tasksLauncher(taskQueue, readJsonConfig(workDir));
+tasksLauncher(taskQueue, workDir);

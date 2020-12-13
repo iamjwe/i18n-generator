@@ -45,7 +45,6 @@ const convertMdDir = (mdDirPath, resPath, rules) => {
       } else {
         curResPath = getPathConcat(withNameResPath, getSliceBasePath(curMdDirPath, mdDirPath));
         relativePath = '/' + getSliceBasePath(curMdDirPath, mdDirPath);
-        console.log('/' + relativePath)
       }
       // 处理当前md文件夹下的所有文件
       const files = getFilesPathArrByDir(curMdDirPath, /.md/);
