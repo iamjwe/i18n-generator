@@ -1,18 +1,22 @@
 const { extraWordsByContext } = require("../sdk/extra");
 const { insertColumn } = require("../sdk/markdown");
-const { readFileUtf8, writeFile } = require("../utils/fileUtils");
+const { readFileUtf8, writeFile, createFile } = require("../utils/fileUtils");
 
 exports.extraIO = (fromCodeFilePath, toMdFilePath, rules) => {
   // 读取
   const context = readFileUtf8(fromCodeFilePath);
-  let mdContent = readFileUtf8(toMdFilePath);
+  let content = '';
   // 提取 + 添加
   rules.forEach((rule) => {
     const columnName = rule.columnName;
     const words = extraWordsByContext(context, rule.sentenceReg, rule.wordsReg, rule.wordsRegIndex);
-    mdContent = insertColumn(mdContent, {columnHead: columnName, columnData: words});
+    if (words.length > 0) {
+      content = insertColumn(content, {columnHead: columnName, columnData: words});
+    }
   })
   // 写入
-  writeFile(toMdFilePath, mdContent);
+  if (content) {
+    writeFile(createFile(toMdFilePath), content);
+  }
 }
 

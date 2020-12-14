@@ -78,12 +78,12 @@ exports.createFile = (filePath) => {
 
 exports.getFilesPathArrByDir = (dirPath, fileNameReg) => {
   let filesPathArr = [];
-  const files = fs.readdirSync(dirPath).filter((item) => {// 过滤文件夹
+  let files = fs.readdirSync(dirPath).filter((item) => {// 过滤文件夹
     const statObj = fs.statSync(p.join(dirPath, item));
     return !statObj.isDirectory()
   });
   if (fileNameReg) {
-    files.filter((fileName) => {
+    files = files.filter((fileName) => {
       const fileSuffix = fileName.match(/(\..+)$/)[1];
       return fileNameReg.test(fileSuffix)
     })

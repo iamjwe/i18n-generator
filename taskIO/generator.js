@@ -1,6 +1,6 @@
 const { convert2ColumnToResourceJsStr, insertToResImpAndExp } = require("../sdk/generator");
 const { selectColumn } = require("../sdk/markdown");
-const { readFileUtf8, writeFile } = require("../utils/fileUtils");
+const { readFileUtf8, writeFile, createFile } = require("../utils/fileUtils");
 
 
 exports.generatorResourceFileIO = (mdFilePath, keyColumnIndex, valColumnIndex, resFilePath) => {
@@ -12,7 +12,7 @@ exports.generatorResourceFileIO = (mdFilePath, keyColumnIndex, valColumnIndex, r
   // 转换
   const resourceJsStr = convert2ColumnToResourceJsStr(keyColumnObj.columnData, valColumnObj.columnData);
   // 写入
-  writeFile(resFilePath, resourceJsStr);
+  writeFile(createFile(resFilePath), resourceJsStr);
 }
 
 exports.generatorResImpAndExpFileIO = (resImpAndExpFilePath, resFileName, relativeResFilePath) => {

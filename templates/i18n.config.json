@@ -1,19 +1,23 @@
 {
   "extra": {
     "codePath": {
-      "path": "src",
-      "suffixs": ["/.js$/"]
+      "path": [{
+        "base": "src/experiment-tracking",
+        "excluded": ["reducers", "utils", "components/modals"]
+      }],
+      "suffixs": ["/.js$/"],
+      "extraSuffixs": ["/.test.js$/"]
     },
-    "markdownPath": "md2",
+    "markdownPath": "md",
     "rules": [{
-      "sentenceReg": "/t\\((['\"])[^\\1]*\\1\\)/g",
-      "wordsReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
+      "sentenceReg": "/(?<=\\W)t\\([\\s]*(['\"])[^\\1]*?\\1[\\s]*\\)/g",
+      "wordsReg": "/t\\((['\"])([^\\1]*?)\\1\\)/",
       "wordsRegIndex": 2,
-      "columnName": "英语"
+      "columnName": "英文"
     },
     {
-      "sentenceReg": "/t\\((['\"])[^\\1]*\\1\\)/g",
-      "wordsReg": "/t\\((['\"])([^\\1]*)\\1\\)/",
+      "sentenceReg": "/(?<=\\W)t\\([\\s]*(['\"])[^\\1]*?\\1[\\s]*\\)/g",
+      "wordsReg": "/t\\((['\"])([^\\1]*?)\\1\\)/",
       "wordsRegIndex": 2,
       "columnName": "中文"
     }]
@@ -28,8 +32,8 @@
     }]
   },
   "generator": {
-    "markdownPath": "md2",
-    "resourcePath": "locales",
+    "markdownPath": "md",
+    "resourcePath": "locales2",
     "generatorRule": [{
       "fromColumn": {
         "keyColumnNum": 1,

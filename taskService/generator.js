@@ -22,7 +22,7 @@ const convertMdFile = (mdFilePath, resPath, rules) => {
   rules.forEach((rule) => {
     const resName = rule.toResource.name;
     const resImpAndExpFilePath = createFile(getPathConcat(resPath, resName) + '.js');
-    const resFilePath = createFile(getPathConcat(getPathConcat(resPath, resName), getFileNameFromPath(mdFilePath).replace('.md', '.js')));
+    const resFilePath = getPathConcat(getPathConcat(resPath, resName), getFileNameFromPath(mdFilePath).replace('.md', '.js'));
     generatorResourceFileIO(mdFilePath, rule.fromColumn.keyColumnNum - 1, rule.fromColumn.valColumnNum - 1, resFilePath);
     generatorResImpAndExpFileIO(resImpAndExpFilePath, getFileNameNoSuffix(mdFilePath), `./${resName}`);
   })
@@ -49,7 +49,7 @@ const convertMdDir = (mdDirPath, resPath, rules) => {
       // 处理当前md文件夹下的所有文件
       const files = getFilesPathArrByDir(curMdDirPath, /.md/);
       files.forEach((filePath) => {
-        const resFilePath = createFile(getPathConcat(curResPath, getFileNameFromPath(filePath).replace('.md', '.js')));
+        const resFilePath = getPathConcat(curResPath, getFileNameFromPath(filePath).replace('.md', '.js'));
         generatorResourceFileIO(filePath, rule.fromColumn.keyColumnNum - 1, rule.fromColumn.valColumnNum - 1, resFilePath);
         generatorResImpAndExpFileIO(resImpAndExpFilePath, getFileNameNoSuffix(filePath), `./${resName}${relativePath}`);
       })

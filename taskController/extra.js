@@ -1,11 +1,30 @@
 const { extraService } = require('../taskService/extra');
-const { getPathAbsolute } = require('../utils/pathUtils');
+const { getPathAbsolute, getPathConcat } = require('../utils/pathUtils');
 
 // 负责请求（命令）预处理（用户输入、配置信息）
 const taskExtra = (config) => {
   return new Promise((resolve, reject) => {
-    config.codePath.path = getPathAbsolute(config.codePath.path);
+    if (typeof config.codePath.path === 'string') {
+      // a file or a dir
+      config.codePath.path = getPathAbsolute(config.codePath.path);
+    } else {
+      // 数组
+      config.codePath.path = config.codePath.path.map((path) => {
+        if (typeof path === 'string') {
+          return getPathAbsolute(path);
+        } else {
+          const base = getPathAbsolute(path.base);
+          const excluded = path.excluded.map((exclud) => {
+            return getPathConcat(base, exclud)
+          })
+          return {base, excluded};
+        }
+      })
+    }
     config.codePath.suffixs = config.codePath.suffixs.map((strReg) => {
+      return eval(strReg);
+    });
+    config.codePath.extraSuffixs = config.codePath.extraSuffixs.map((strReg) => {
       return eval(strReg);
     });
     config.markdownPath = getPathAbsolute(config.markdownPath);
@@ -16,7 +35,7 @@ const taskExtra = (config) => {
         wordsReg: eval(rule.wordsReg),
       }
     })
-    extraService(config.codePath.path, config.codePath.suffixs, config.markdownPath, config.rules);
+    extraService(config.codePath.path, config.codePath.suffixs, config.codePath.extraSuffixs, config.markdownPath, config.rules);
     resolve();
   })
 }
