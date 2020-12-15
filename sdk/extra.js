@@ -10,7 +10,7 @@ extraWordsByContext = (context, sentenceReg, wordsReg, wordsRegIndex) => {
             console.log(sentences)
             sentences.forEach((sentence) => {
                 if (sentence.match(wordsReg) !== null) {
-                    words.push([wordsRegIndex]);
+                    words.push(sentence.match(wordsReg)[wordsRegIndex]);
                 }
             })
         }
