@@ -1,6 +1,6 @@
 const { extraIO } = require('../taskIO/extra');
 const { getAllDirNameRecursion, getFilesPathArrByDir, createDir, deleteDir, readFileUtf8 } = require('../utils/fileUtils');
-const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix, getPathType } = require('../utils/pathUtils');
+const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix, getPathType, getFileNameNoSuffix } = require('../utils/pathUtils');
 
 const dirPathFilter = (dirPathArr, excluded) => {
   let filterResult = dirPathArr.filter((dirPath) => {
@@ -38,7 +38,7 @@ const filePathFilter = (filePathArr, excluded, suffixRegArr, extraSuffixRegArr) 
 }
 // codePath是一个文件
 const extraCodeFile = (codeFilePath, mdDirPath, rules) => {
-  const mdFilePath = getPathConcat(mdDirPath, getFileNameFromPath(codeFilePath).replace('.js', '.md'));
+  const mdFilePath = getPathConcat(mdDirPath, getFileNameNoSuffix(codeFilePath) + '.md');
   extraIO(codeFilePath, mdFilePath, rules);
 }
 

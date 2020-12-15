@@ -24,7 +24,7 @@ const taskExtra = (config) => {
     config.codePath.suffixs = config.codePath.suffixs.map((strReg) => {
       return eval(strReg);
     });
-    config.codePath.extraSuffixs = config.codePath.extraSuffixs.map((strReg) => {
+    config.codePath.notSuffixs = config.codePath.notSuffixs.map((strReg) => {
       return eval(strReg);
     });
     config.markdownPath = getPathAbsolute(config.markdownPath);
@@ -35,7 +35,7 @@ const taskExtra = (config) => {
         wordsReg: eval(rule.wordsReg),
       }
     })
-    extraService(config.codePath.path, config.codePath.suffixs, config.codePath.extraSuffixs, config.markdownPath, config.rules);
+    extraService(config.codePath.path, config.codePath.suffixs, config.codePath.notSuffixs, config.markdownPath, config.rules);
     resolve();
   })
 }

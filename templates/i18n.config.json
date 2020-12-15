@@ -6,7 +6,7 @@
         "excluded": ["reducers", "utils", "components/modals"]
       }],
       "suffixs": ["/.js$/"],
-      "extraSuffixs": ["/.test.js$/"]
+      "notSuffixs": ["/.test.js$/"]
     },
     "markdownPath": "md",
     "rules": [{
@@ -20,15 +20,6 @@
       "wordsReg": "/t\\((['\"])([^\\1]*?)\\1\\)/",
       "wordsRegIndex": 2,
       "columnName": "中文"
-    }]
-  },
-  "translate": {
-    "fromColumn": 1,
-    "toColumn": [{
-      "columnName": "sa",
-      "columnData": {
-
-      }
     }]
   },
   "generator": {
