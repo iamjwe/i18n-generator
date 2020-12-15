@@ -10,9 +10,7 @@ exports.extraIO = (fromCodeFilePath, toMdFilePath, rules) => {
   rules.forEach((rule) => {
     const columnName = rule.columnName;
     const words = extraWordsByContext(context, rule.sentenceReg, rule.wordsReg, rule.wordsRegIndex);
-    if (words.length > 0) {
-      content = insertColumn(content, {columnHead: columnName, columnData: words});
-    }
+    content = insertColumn(content, {columnHead: columnName, columnData: words});
   })
   // 写入
   if (content) {
