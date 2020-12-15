@@ -46,7 +46,7 @@ const deleteDir = (dirPath) => {
   if( isPathExist(dirPath) ) {
       files = fs.readdirSync(dirPath);
       files.forEach(function(file){
-          let curPath = Path.join(dirPath, file);
+          let curPath = p.join(dirPath, file);
           if(fs.lstatSync(curPath).isDirectory()) {
               deleteDir(curPath);
           } else {
