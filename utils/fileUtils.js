@@ -46,18 +46,14 @@ const deleteDir = (dirPath) => {
   if( isPathExist(dirPath) ) {
       files = fs.readdirSync(dirPath);
       files.forEach(function(file){
-          let curPath = dirPath + "/" + file;
-          if(fs.statSync(curPath).isDirectory()) {
+          let curPath = Path.join(dirPath, file);
+          if(fs.lstatSync(curPath).isDirectory()) {
               deleteDir(curPath);
           } else {
               fs.unlinkSync(curPath);
           }
       });
       fs.rmdirSync(dirPath);
-      // 有时候会删除失败，再删除一次
-      if (isPathExist(dirPath)) {
-        deleteDir(dirPath);
-      }
   }
 }
 
