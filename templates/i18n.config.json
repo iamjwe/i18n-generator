@@ -1,48 +1,77 @@
 {
   "extra": {
-    "codePath": {
-      "path": [{
-        "base": "src/experiment-tracking",
-        "excluded": ["reducers", "utils", "components/modals"]
-      }],
-      "suffixs": ["/.js$/"],
-      "notSuffixs": ["/.test.js$/"]
-    },
-    "markdownPath": "md",
-    "rules": [{
-      "columnName": "英文",
-      "isDistinct":  true,
-      "sentenceReg": "/(?<=\\W)t\\([\\s]*(['\"])[^\\1]*?\\1[\\s]*\\)/g",
-      "wordsReg": "/t\\((['\"])([^\\1]*?)\\1\\)/",
-      "wordsRegIndex": 2
-    },
-    {
-      "columnName": "中文",
-      "sentenceReg": "/(?<=\\W)t\\([\\s]*(['\"])[^\\1]*?\\1[\\s]*\\)/g",
-      "wordsReg": "/t\\((['\"])([^\\1]*?)\\1\\)/",
-      "wordsRegIndex": 2
-    }]
+    "fromCode": [
+      "./pages"
+    ],
+    "toMarkdown": "i18n/md",
+    "rules": {
+      "columnInfo": [
+        {
+          "name": "key",
+          "isPrimary": true
+        },
+        {
+          "name": "中文"
+        }
+      ],
+      "rowData": [
+        {
+          "sentenceReg": "/(?:intl.formatMessag).+(?:\\))/g",
+          "element": [
+            {
+              "wordsReg": "/(?:id:\\s*(['\"])([^\\1]+?)\\1)/",
+              "wordsRegIndex": 2,
+              "columnNum": 1
+            },
+            {
+              "wordsReg": "/(?:defaultMessage:\\s*(['\"])([^\\1]+?)\\1)/",
+              "wordsRegIndex": 2,
+              "columnNum": 2
+            }
+          ]
+        },
+        {
+          "sentenceReg": "/(?:<FormattedMessage).+\\/>/g",
+          "element": [
+            {
+              "wordsReg": "/(?:id=)\\s*(['\"])([^\\1]+?)\\1/",
+              "wordsRegIndex": 2,
+              "columnNum": 1
+            },
+            {
+              "wordsReg": "/(?:defaultMessage=)\\s*(['\"])([^\\1]+?)\\1/",
+              "wordsRegIndex": 2,
+              "columnNum": 2
+            }
+          ]
+        }
+      ]
+    }
   },
   "generator": {
-    "markdownPath": "md",
-    "resourcePath": "locales2",
-    "generatorRule": [{
-      "fromColumn": {
-        "keyColumnNum": 1,
-        "valColumnNum": 1
+    "fromMarkdown": [
+      "i18n/md"
+    ],
+    "toLocales": "locales2",
+    "rules": [
+      {
+        "fromColumn": {
+          "keyColumnNum": 1,
+          "valColumnNum": 1
+        },
+        "toResource": {
+          "name": "en-US"
+        }
       },
-      "toResource": {
-        "name": "en-US"
+      {
+        "fromColumn": {
+          "keyColumnNum": 1,
+          "valColumnNum": 2
+        },
+        "toResource": {
+          "name": "zh-CN"
+        }
       }
-    },
-    {
-      "fromColumn": {
-        "keyColumnNum": 1,
-        "valColumnNum": 2
-      },
-      "toResource": {
-        "name": "zh-CN"
-      }
-    }]
+    ]
   }
 }
