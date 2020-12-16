@@ -1,6 +1,6 @@
 const { rowDataToMdRowStr, columnArrToColumnObj, columnObjToColumnArr, mdTableStrToMatrixObj, matrixObjTomdTableStr } = require('./markdown-helper');
 
-const initMdTableStrByHeadRow = (headRow) => {
+const initMdTableStrByHeadArr = (headRow) => {
     const headRowStr = rowDataToMdRowStr(headRow);
     let secondRowStr = '|';
     headRow.forEach((_) => {
@@ -15,20 +15,20 @@ const insertRow = (content, rowData) => {
     return matrixObjTomdTableStr(matrix);
 }
 
-const insertRowByDistinctLimit = (content, rowData, distinctIndexArr) => {
+const insertRowByPrimaryLimit = (content, rowData, primaryIndexArr) => {
     let newContent = content;
-    let isDistinct = false;
-    const len = distinctIndexArr.length;
+    let isPrimary = false;
+    const len = primaryIndexArr.length;
     for (let i=0; i<len; i++) {
         const columnObj = selectColumn(content, i);
         const item = rowData[i];
         if (columnObj.columnData.includes(item)) {
-            isDistinct = true;
+            isPrimary = true;
             break;
         }
     }
-    if (!isDistinct) {
-        newContent = insertRow(content, rowData)
+    if (!isPrimary && rowData[primaryIndexArr] !== '_') {
+        newContent = insertRow(content, rowData);
     }
     return newContent
 }
@@ -72,4 +72,4 @@ const selectColumn = (content, columnIndex) => {
 }
 
 // markdown表格的读写单位为列，所以只暴露对column的读写操作
-module.exports = { initMdTableStrByHeadRow, insertRow, insertRowByDistinctLimit, insertColumn, selectColumn }
+module.exports = { initMdTableStrByHeadArr, insertRow, insertRowByPrimaryLimit, insertColumn, selectColumn }

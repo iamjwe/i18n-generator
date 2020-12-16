@@ -13,7 +13,6 @@ const {
   getFileNameFromPath,
   getPathConcat,
   getSliceBasePath,
-  getFileSuffix,
   getPathType,
   getFileNameNoSuffix
 } = require('../utils/pathUtils');
@@ -57,15 +56,18 @@ const convertMdDir = (mdDirPath, resPath, rules) => {
   })
 }
 
-exports.generatorService = (mdPath, resPath, rules) => {
+exports.generatorService = (fromMarkdown, resPath, rules) => {
   deleteDir(resPath);
   createDir(resPath);
-  switch (getPathType(mdPath)) {
-    case 'file':
-      convertMdFile(mdPath, resPath, rules);
-      break;
-    case 'dir':
-      convertMdDir(mdPath, resPath, rules);
-      break;
-  }
+  fromMarkdown.forEach((mdPath) => {
+    switch (getPathType(mdPath)) {
+      case 'file':
+        convertMdFile(mdPath, resPath, rules);
+        break;
+      case 'dir':
+        convertMdDir(mdPath, resPath, rules);
+        break;
+    }
+  })
+
 }

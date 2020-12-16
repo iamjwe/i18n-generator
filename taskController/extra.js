@@ -1,42 +1,59 @@
 const { extraService } = require('../taskService/extra');
 const { getPathAbsolute, getPathConcat } = require('../utils/pathUtils');
 
-// 负责请求（命令）预处理（用户输入、配置信息）
-const taskExtra = (config) => {
-  return new Promise((resolve, reject) => {
-    if (typeof config.codePath.path === 'string') {
-      // a file or a dir
-      config.codePath.path = getPathAbsolute(config.codePath.path);
-    } else {
-      // 数组
-      config.codePath.path = config.codePath.path.map((path) => {
-        if (typeof path === 'string') {
-          return getPathAbsolute(path);
-        } else {
-          const base = getPathAbsolute(path.base);
-          const excluded = path.excluded.map((exclud) => {
-            return getPathConcat(base, exclud)
+const convertFromCodeConfig = (fromCode) => {
+  if (typeof fromCode === 'string') {
+    return getPathAbsolute(fromCode);
+  }
+  if (Array.isArray(fromCode)) {
+    const newFromCode = fromCode;
+    fromCode.forEach((codeItem, index) => {
+      if (typeof codeItem === 'string') {
+        fromCode[index] = getPathAbsolute(codeItem);
+      }
+      if (typeof codeItem === 'object') {
+        const basePath = getPathAbsolute(codeItem.path);
+        newFromCode[index] = {
+          ...codeItem,
+          path: basePath,
+          excluded: codeItem.excluded.map((exclud) => {
+            return getPathConcat(basePath, exclud)
+          }),
+          suffixs: codeItem.suffixs.map((strReg) => {
+            return eval(strReg);
+          }),
+          notSuffixs: codeItem.notSuffixs.map((strReg) => {
+            return eval(strReg);
           })
-          return {base, excluded};
+        }
+      }
+    })
+    return newFromCode
+  }
+}
+
+const convertRulesConfig = (rules) => {
+  rules.rowData = rules.rowData.map((item) => {
+    return {
+      sentenceReg: eval(item.sentenceReg),
+      element: item.element.map((ele) => {
+        return {
+          ...ele,
+          wordsReg: eval(ele.wordsReg)
         }
       })
     }
-    config.codePath.suffixs = config.codePath.suffixs.map((strReg) => {
-      return eval(strReg);
-    });
-    config.codePath.notSuffixs = config.codePath.notSuffixs.map((strReg) => {
-      return eval(strReg);
-    });
-    config.markdownPath = getPathAbsolute(config.markdownPath);
-    config.rules = config.rules.map((rule) => {
-      return {
-        ...rule,
-        sentenceReg: eval(rule.sentenceReg),
-        wordsReg: eval(rule.wordsReg),
-        isDistinct: rule.isDistinct ? true : false,
-      }
-    })
-    extraService(config.codePath.path, config.codePath.suffixs, config.codePath.notSuffixs, config.markdownPath, config.rules);
+  })
+  return rules
+}
+
+// 负责请求（命令）预处理（用户输入、配置信息）
+const taskExtra = (config) => {
+  return new Promise((resolve, reject) => {
+    const fromCode = convertFromCodeConfig(config.fromCode);
+    const markdownPath = getPathAbsolute(config.toMarkdown);
+    const rules = convertRulesConfig(config.rules);
+    extraService(fromCode, markdownPath, rules);
     resolve();
   })
 }

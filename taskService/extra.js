@@ -1,66 +1,33 @@
+const { forEach } = require('lodash');
 const { extraIO } = require('../taskIO/extra');
-const { getAllDirNameRecursion, getFilesPathArrByDir, createDir, deleteDir, readFileUtf8 } = require('../utils/fileUtils');
-const { getFileNameFromPath, getPathConcat, getSliceBasePath, getFileSuffix, getPathType, getFileNameNoSuffix } = require('../utils/pathUtils');
+const { getAllDirNameRecursion, getFilesPathArrByDir, createDir, deleteDir } = require('../utils/fileUtils');
+const { getPathConcat, getSliceBasePath, getPathType, getFileNameNoSuffix, getDirPathFiltered, getFilePathFiltered } = require('../utils/pathUtils');
 
-const dirPathFilter = (dirPathArr, excluded) => {
-  let filterResult = dirPathArr.filter((dirPath) => {
-    if (excluded.includes(dirPath)) {
-      return false
-    }
-    return true
-  })
-  return filterResult
-}
-
-const filePathFilter = (filePathArr, excluded, suffixRegArr, extraSuffixRegArr) => {
-  let filterResult = filePathArr.filter((filePath) => {
-    const fileName = getFileNameFromPath(filePath);
-    if (excluded && excluded.includes(fileName)) {
-      return false
-    }
-    const suffix = getFileSuffix(fileName);
-    let regMapResult = false;
-    for (let i = 0; i < suffixRegArr.length; i++) {
-      if (suffixRegArr[i].test(suffix)) {
-        regMapResult = true;
-        break;
-      }
-    }
-    for (let i = 0; i < extraSuffixRegArr.length; i++) {
-      if (extraSuffixRegArr[i].test(suffix)) {
-        regMapResult = false;
-        break;
-      }
-    }
-    return regMapResult
-  })
-  return filterResult
-}
 // codePath是一个文件
-const extraCodeFile = (codeFilePath, mdDirPath, rules) => {
-  const mdFilePath = getPathConcat(mdDirPath, getFileNameNoSuffix(codeFilePath) + '.md');
-  extraIO(codeFilePath, mdFilePath, rules);
+const extraCodeFile = (codeFile, mdDir, rules) => {
+  const toMdFile = getPathConcat(mdDir, getFileNameNoSuffix(codeFile) + '.md');
+  extraIO(codeFile, toMdFile, rules);
 }
-
 
 // codePath是一个文件夹
-const extraCodeDir = (codeDirPath, suffixRegArr, extraSuffixRegArr, markdownPath, rules, options) => {
-  let dirPathArr = getAllDirNameRecursion(codeDirPath);
+const extraCodeDir = (codeDir, mdDir, rules, options) => {
+  let dirPathArr = getAllDirNameRecursion(codeDir);
   if (options && options.excluded) {
-    dirPathArr = dirPathFilter(dirPathArr, options.excluded)
+    dirPathArr = getDirPathFiltered(dirPathArr, options.excluded)
   }
   dirPathArr.forEach((curDirPath) => {
     let curMdDiPath;
     // 截取相对路径获取mdDirPath
-    if (curDirPath === codeDirPath) {
-      curMdDiPath = markdownPath;
+    if (curDirPath === codeDir) {
+      curMdDiPath = mdDir;
     } else {
-      curMdDiPath = getPathConcat(markdownPath, getSliceBasePath(curDirPath, codeDirPath));
+      curMdDiPath = getPathConcat(mdDir, getSliceBasePath(curDirPath, codeDir));
     }
-    // 获取当前文件夹下的符合suffix后缀的文件
     let files = getFilesPathArrByDir(curDirPath);
-    // 过滤不符合后缀名的文件
-    files = filePathFilter(files, options ? options.excluded : undefined, suffixRegArr, extraSuffixRegArr);
+    // 获取当前文件夹下的符合后缀规则的文件
+    if (options) {
+      files = getFilePathFiltered(files, options.excluded, options.suffixs, options.notSuffixs);
+    }
     // 调用parseCodeFile提取文件夹中的每个文件
     files.forEach((filePath) => {
       extraCodeFile(filePath, curMdDiPath, rules, options);
@@ -68,38 +35,48 @@ const extraCodeDir = (codeDirPath, suffixRegArr, extraSuffixRegArr, markdownPath
   })
 }
 
-// 负责业务控制
-exports.extraService = (codePath, suffixRegArr, extraSuffixRegArr, markdownPath, rules) => {
-  deleteDir(markdownPath);  // 删除有内容的
-  createDir(markdownPath);  // 创建一个空的
-  if (typeof codePath === "string") {
-    // codepath.path = "file / dir"
-    switch (getPathType(codePath)) {
-      case 'file':
-        extraCodeFile(codePath, markdownPath, rules);
+// 配置信息中，fromCode是一个字符串
+const fromCodeTypeOfString = (fromCode, toMarkdown, rules) => {
+  switch (getPathType(fromCode)) {
+    case 'file':
+      extraCodeFile(fromCode, toMarkdown, rules);
+      break;
+    case 'dir':
+      extraCodeDir(fromCode, toMarkdown, rules);
+      break;
+  }
+}
+
+// 配置信息中，fromCode是一个字符串
+const fromCodeTypeOfArray = (fromCode, toMarkdown, rules) => {
+  fromCode.forEach((codeInfo) => {
+    switch (typeof codeInfo) {
+      case 'string':
+        fromCodeTypeOfString(codeInfo, toMarkdown, rules);
         break;
-      case 'dir':
-        extraCodeDir(codePath, suffixRegArr, extraSuffixRegArr, markdownPath, rules);
+      case 'object':
+        // 肯定是一个文件夹
+        const options = {
+          "excluded": codeInfo.excluded,
+          "suffixs": codeInfo.suffixs,
+          "notSuffixs": codeInfo.notSuffixs,
+        }
+        extraCodeDir(codeInfo.path, toMarkdown, rules, options);
         break;
     }
-  } else {
-    // codepath.path = "[file / dir]"
-    codePath.forEach((path) => {
-      if (typeof path === 'string') {
-        switch (getPathType(path)) {
-          case 'file':
-            extraCodeFile(path, markdownPath, rules);
-            break;
-          case 'dir':
-            extraCodeDir(path, suffixRegArr, extraSuffixRegArr, markdownPath, rules);
-            break;
-        }
-      }
-      else {
-        // codepath.path = "[{base: "src", excluded: "modals"}]"
-        extraCodeDir(path.base, suffixRegArr, extraSuffixRegArr, markdownPath, rules, { excluded: path.excluded });
-      }
-    })
-  }
-
+  })
 }
+
+// 负责业务控制
+exports.extraService = (fromCode, toMarkdown, rules) => {
+  deleteDir(toMarkdown);  // 删除有内容的
+  createDir(toMarkdown);  // 创建一个空的
+  if (typeof fromCode === 'string') {
+    fromCodeTypeOfString(fromCode, toMarkdown, rules)
+    return
+  }
+  if (Array.isArray(fromCode)) {
+    fromCodeTypeOfArray(fromCode, toMarkdown, rules)
+  }
+}
+

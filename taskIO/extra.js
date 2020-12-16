@@ -1,42 +1,44 @@
 const { extraSentencesByContext, extraWordsBySentence } = require("../sdk/extra");
-const { insertColumn, insertRowByDistinctLimit, initMdTableStrByHeadRow } = require("../sdk/markdown");
+const { insertRowByPrimaryLimit, initMdTableStrByHeadArr } = require("../sdk/markdown");
 const { readFileUtf8, writeFile, createFile } = require("../utils/fileUtils");
 
-const getHeadRowByRules = (rules) => {
-  let row = [];
-  rules.forEach((rule) => {
-    row.push(rule.columnName);
-  })
-  return row;
-}
-
-const getDistinctIndexArrByRules = (rules) => {
-  let distinctIndexArr = [];
-  rules.forEach((rule, index) => {
-    if (rule.isDistinct) {
-      distinctIndexArr.push(index);
+const parseColumnInfo = (rules) => {
+  let headNameArr = [];
+  let primaryIndexArr = [];
+  rules.columnInfo.forEach((rule, index) => {
+    headNameArr.push(rule.name)
+    if (rule.isPrimary) {
+      primaryIndexArr.push(index);
     }
   })
-  return distinctIndexArr;
+  return { headNameArr, primaryIndexArr };
 }
 
 exports.extraIO = (fromCodeFilePath, toMdFilePath, rules) => {
+  console.log(fromCodeFilePath);
+  ('-------------------------------------------------------------------------');
   // 读取
   const context = readFileUtf8(fromCodeFilePath);
   // 构造内容
-  let content = initMdTableStrByHeadRow(getHeadRowByRules(rules));
-  const distinctIndexArr = getDistinctIndexArrByRules(rules);
-  let sentences = extraSentencesByContext(context, rules[0].sentenceReg);
-  if (sentences!==null) {
-    sentences.forEach((sentence) => {
-      let rowData = [];
-      rules.forEach((rule) => {
-        rowData.push(extraWordsBySentence(sentence, rule.wordsReg, rule.wordsRegIndex));
+  const columnInfo = parseColumnInfo(rules);
+  let content = initMdTableStrByHeadArr(columnInfo.headNameArr);
+  const primaryIndexArr = columnInfo.primaryIndexArr;
+  rules.rowData.forEach((row) => {
+    let sentences = extraSentencesByContext(context, row.sentenceReg);
+    if (sentences!==null) {
+      sentences.forEach((sentence) => {
+        let rowData = [];
+        row.element.forEach((ele) => {
+          rowData[ele.columnNum-1] = extraWordsBySentence(sentence, ele.wordsReg, ele.wordsRegIndex)
+        })
+        console.log(sentence);
+        console.log(rowData);
+        content = insertRowByPrimaryLimit(content, rowData, primaryIndexArr);
       })
-      content = insertRowByDistinctLimit(content, rowData, distinctIndexArr);
-    })
-  }
+    }
+  })
   // 写入
   writeFile(createFile(toMdFilePath), content);
+  console.log('-------------------------------------------------------------------------');
 }
 

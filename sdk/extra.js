@@ -9,7 +9,7 @@ const extraWordsBySentence = (sentence, wordsReg, wordsRegIndex) => {
     if (sentence.match(wordsReg) !== null) {
         words = sentence.match(wordsReg)[wordsRegIndex];
     } else {
-        words = '';
+        words = '_';
     }
     return words;
 }
