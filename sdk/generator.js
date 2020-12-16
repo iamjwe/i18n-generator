@@ -42,7 +42,7 @@ const randomString = (number) => {
 
 // 插入到资源引入文件中
 const insertToResImpAndExp = (oldContent, resFileName, relativeResFilePath) => {
-    const insertVarName = firstToLowwer(resFileName) + '_' + randomString(3);
+    const insertVarName = randomString(3) + '_' + firstToLowwer(resFileName);
     let oldImport = '';
     let oldExport = ''; //只取...的部分
     if (oldContent) {
