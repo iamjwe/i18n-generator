@@ -1,52 +1,36 @@
-const lodash = require('lodash/fp');
+const { rowDataToMdRowStr, columnArrToColumnObj, columnObjToColumnArr, mdTableStrToMatrixObj, matrixObjTomdTableStr } = require('./markdown-helper');
 
-const columnArrToColumnObj = (columnArr) => {
-    const columnHead = columnArr[0];
-    columnArr.shift();// 去除表头
-    columnArr.shift();// 去除|...|...|
-    return {columnHead, columnData: columnArr}
-}
-
-const columnObjToColumnArr = (columnObj) => {
-    const columnArr = columnObj.columnData;
-    columnArr.unshift("-----");
-    columnArr.unshift(columnObj.columnHead);
-    return columnArr
-}
-
-// mdTable字符串转换为矩阵（二维数组）
-const mdTableStrToMatrixObj = (table) => {
-    const filterBlank = (item) => {return item != ''};
-    const convertTrToArr = (tr) => {
-        const convertTrStream = lodash.flowRight(lodash.map(lodash.trim), lodash.filter(filterBlank), [lodash.split('|')])
-        return convertTrStream(tr);
-    }
-    const convertTableStream = lodash.flowRight([lodash.map(convertTrToArr), lodash.filter(filterBlank), lodash.split('\r\n')]);
-    return convertTableStream(table);
-}
-
-const matrixObjTomdTableStr = (matrix) => {
-    let mdTableStr = '';
-    const convertArrToTr = (arr) => {
-        let trStr = '|' + arr.join('|') + '|';
-        return trStr
-    }
-    matrix.forEach((arr) => {
-        const trStr = convertArrToTr(arr);
-        mdTableStr += trStr + '\r\n';
+const initMdTableStrByHeadRow = (headRow) => {
+    const headRowStr = rowDataToMdRowStr(headRow);
+    let secondRowStr = '|';
+    headRow.forEach((_) => {
+        secondRowStr += '-----|';
     })
-    return mdTableStr;
+    return `${headRowStr}\r\n${secondRowStr}\r\n`
 }
 
-// 读取一列 {head, data}
-const selectColumn = (content, columnIndex) => {
-    const matrix = mdTableStrToMatrixObj(content);
-    const columnArr = [];
-    matrix.forEach(row => {
-        columnArr.push(row[columnIndex]);
-    });
-    const columnObj = columnArrToColumnObj(columnArr);
-    return columnObj;
+const insertRow = (content, rowData) => {
+    const matrix = content ? mdTableStrToMatrixObj(content) : [];
+    matrix.push(rowData);
+    return matrixObjTomdTableStr(matrix);
+}
+
+const insertRowByDistinctLimit = (content, rowData, distinctIndexArr) => {
+    let newContent = content;
+    let isDistinct = false;
+    const len = distinctIndexArr.length;
+    for (let i=0; i<len; i++) {
+        const columnObj = selectColumn(content, i);
+        const item = rowData[i];
+        if (columnObj.columnData.includes(item)) {
+            isDistinct = true;
+            break;
+        }
+    }
+    if (!isDistinct) {
+        newContent = insertRow(content, rowData)
+    }
+    return newContent
 }
 
 // 插入一列
@@ -76,5 +60,16 @@ const insertColumn = (content, columnObj, columnIndex) => {
     return mdTableStr;
 }
 
+// 读取一列 {head, data}
+const selectColumn = (content, columnIndex) => {
+    const matrix = mdTableStrToMatrixObj(content);
+    const columnArr = [];
+    matrix.forEach(row => {
+        columnArr.push(row[columnIndex]);
+    });
+    const columnObj = columnArrToColumnObj(columnArr);
+    return columnObj;
+}
+
 // markdown表格的读写单位为列，所以只暴露对column的读写操作
-module.exports = { selectColumn, insertColumn}
+module.exports = { initMdTableStrByHeadRow, insertRow, insertRowByDistinctLimit, insertColumn, selectColumn }

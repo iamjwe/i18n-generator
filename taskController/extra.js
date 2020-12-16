@@ -33,6 +33,7 @@ const taskExtra = (config) => {
         ...rule,
         sentenceReg: eval(rule.sentenceReg),
         wordsReg: eval(rule.wordsReg),
+        isDistinct: rule.isDistinct ? true : false,
       }
     })
     extraService(config.codePath.path, config.codePath.suffixs, config.codePath.notSuffixs, config.markdownPath, config.rules);
