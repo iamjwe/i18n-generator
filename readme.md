@@ -1,6 +1,6 @@
 ## example
 
-![](.\assets\i18n示例.gif)
+![](https://github.com/iamjwe/i18n-generator/blob/master/assets/i18n%E7%A4%BA%E4%BE%8B.gif)
 
 
 ## install 
