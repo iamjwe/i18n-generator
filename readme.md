@@ -1,3 +1,8 @@
+## example
+
+![](D:\workspace\mians\i18n-generator\assets\i18n示例.gif)
+
+
 ## install 
 
 ```shell
